@@ -1,13 +1,155 @@
-body {
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400&display=swap');
+
+
+/* to remove deault margin and padding on the site*/
+* {
   margin: 0;
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
-    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
-    sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
+  padding: 0;
 }
 
-code {
-  font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
-    monospace;
+body {
+  font-family: 'Poppins', sans-serif;
+  overflow-x: hidden;
+}
+
+.header {
+  background-color: rgb(14, 1, 35);
+  color: #ffff;
+  margin: auto;
+  width: 100%;
+  text-align: center;
+}
+
+.title {
+  color:  rgb(14, 1, 35);
+  width: 50%;
+}
+
+.task-card {
+  position:relative;
+  border-radius: 10px;
+  border: solid rgb(203, 203, 231) 2px;
+  width: 70%;
+  height: inherit;
+  margin: auto;
+  margin-top: 50px;
+  margin-bottom: 50px;
+  padding: 20px 30px;
+}
+
+.btn {
+  border-radius: 5px;
+  color: #ffff;
+  font-size: 16px;
+  border: none;
+  width: 100px;
+  cursor: pointer;
+}
+
+.task-parent {
+  display: flex;
+  position: relative;
+  width: 100%;
+  justify-content: space-between;
+  flex-direction: row;
+}
+
+.task-detail {
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  gap: 10px;
+}
+
+.events {
+  display: flex;
+  flex-direction: column;
+  color:  rgb(14, 1, 35);
+  position: relative;
+  margin: 30px 10px 0 10px;
+  gap: 5px;
+}
+
+#event {
+  background-color: aliceblue;
+  padding: 10px 20px;
+}
+
+.flex {
+  display: flex;
+  justify-content: space-between;
+}
+
+.no-task {
+  color:  rgb(14, 1, 35);
+  text-align: center;
+  margin: 20px 0;
+  font-size: 18px;
+}
+
+.task.reminder {
+  border-left: solid green 3px;
+}
+
+.form {
+  position: relative;
+  width: 100%;
+  margin: 20px;
+}
+
+.form-control {
+  margin: 15px 0;
+
+}
+
+.input {
+  border: solid rgb(168, 168, 205) 1px;
+  border-radius: 5px;
+  width: 90%;
+  height: 35px;
+  padding: 0 10px;
+  color:  rgb(14, 1, 35);
+  font-size: 16px;
+  outline: none;
+}
+
+.input:focus {
+  outline: solid rgb(112, 112, 140) 1.5px;
+}
+
+.block {
+  display: block;
+}
+
+.bold {
+  font-weight: bold;
+}
+
+.set-reminder {
+  margin-right: 20px
+}
+
+.submit {
+  position: relative;
+  border-radius: 5px;
+  color: #ffff;
+  background-color: rgb(14, 1, 35);
+  border: none;
+  width: 50%;
+  cursor: pointer;
+  font-size: 18px;
+  height: 40px;
+  margin: 0 22%;
+}
+
+
+
+
+
+.footer {
+  position: relative;
+  text-align: center;
+  background-color: rgb(14, 1, 35);
+  color: #ffff;
+  bottom: 0;
 }
