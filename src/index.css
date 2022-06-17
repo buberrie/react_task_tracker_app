@@ -142,14 +142,8 @@ body {
   margin: 0 22%;
 }
 
-
-
-
-
 .footer {
   position: relative;
   text-align: center;
-  background-color: rgb(14, 1, 35);
-  color: #ffff;
-  bottom: 0;
+  color: rgb(14, 1, 35);
 }
