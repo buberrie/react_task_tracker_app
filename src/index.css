@@ -157,18 +157,8 @@ body {
   margin: 0 22%;
 }
 
-.submit:active {
-  background-color: black;
-}
-
-.submit:disabled {
-    background-color: #decfe2;
-}
-
-
 .footer {
   position: relative;
   text-align: center;
   color: rgb(14, 1, 35);
-  margin-bottom: 20px;
 }
