@@ -1,6 +1,6 @@
 import Event from "./Event"
 
-const Events = ({ tasks, onDelete, onToggle }) => {
+const Events = ({ tasks, onDelete, onToggle, getTaskId, onEdit }) => {
   return (
     <div className= 'events task-detial'>
         {tasks.map((task, index) => (
@@ -8,7 +8,9 @@ const Events = ({ tasks, onDelete, onToggle }) => {
             key={index} 
             task={task} 
             onDelete={onDelete}
-            onToggle={onToggle}/>
+            onToggle={onToggle}
+            getTaskId={getTaskId}
+            onEdit={onEdit} />
         ))}
     </div>
   )

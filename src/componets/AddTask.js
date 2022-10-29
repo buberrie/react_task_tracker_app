@@ -1,32 +1,45 @@
-import { useState } from "react"
+import { useEffect } from "react"
+import { useNavigate } from 'react-router-dom'
 
-const AddTask = ({ onAdd }) => {
+const AddTask = ({ onAdd, updateTask, setDate, date, setComplete, completed, setText, text, time, setTime, getTask, id, setTaskId}) => {
 
-    const [text, setText] = useState('')
-    const [date, setDate] = useState('')
-    const [time, setTime] = useState('')
-    const [reminder, setRemind] = useState(false)
-
-    const onSubmit = (e) => {
+    
+    const onSubmit = async (e) => {
         e.preventDefault()
-
-        if(!text) {
-            alert("Please enter text")
-            return
+        if (id !== undefined && id !== '') {
+            await updateTask(id)
+            setTaskId("")
+        } else {
+            onAdd()
         }
 
-        onAdd({text, date, time, reminder})
-
-        setText('')
-        setDate('')
-        setTime('')
-        setRemind(false)
+        setDate("")
+        setText("")
+        setComplete(false)
+        setTime("")
     }
 
+    const editHandler = async () => {
+        const docSnap = await getTask(id)
+        setText(docSnap.data().text)
+        setTime(docSnap.data().time)
+        setDate(docSnap.data().date)
+        setComplete(docSnap.data().completed)
+      }
+
+    useEffect(() => {
+        if (id !== undefined && id !== '') {
+            editHandler()
+        }
+    }, [id])
+
+
+
   return (
-    <form className="form" onSubmit={onSubmit}>
+    <form className="form" onSubmit={onSubmit} id="addTask" >
         <legend className="form-control">
             <label htmlFor="title" className="block bold">Task</label>
+            
             <input type="text" 
              placeholder="Add Event/task" 
              className="input" 
@@ -50,16 +63,22 @@ const AddTask = ({ onAdd }) => {
              onChange={(e) => setTime(e.target.value)} />
         </legend>
         <legend className="form-control">
-            <label htmlFor="set reminder" className="bold set-reminder">Set Reminder</label>
+            <label htmlFor="Completed" className="bold set-completed">Completed</label>
             <input type="checkbox"
-            checked={reminder}
-             value={reminder} 
-             onChange={(e) => setRemind(e.currentTarget.checked)} />
+            checked={completed}
+             value={completed} 
+             onChange={(e) => setComplete(e.currentTarget.checked)} />
         </legend>
 
-        <input type="submit" value="save" className="submit" />
+        <button type="submit" className="submit" disabled={ !text } 
+            style={{backgroundColor: id ? 'rgb(0, 51, 0)	' : 'rgb(14, 1, 35)'}}>
+            {
+                id ? "Update" : "save"
+            }
+        </button>
     </form>
   )
+
 }
 
 export default AddTask

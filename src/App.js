@@ -6,99 +6,119 @@ import Events from './componets/Events';
 import AddTask from './componets/AddTask';
 import Footer from './componets/Footer';
 import Button from './componets/Button';
+import { addDoc, collection, getDoc, deleteDoc, doc, onSnapshot, updateDoc } from "firebase/firestore"; 
+import { db } from "./firebase-config";
 
 function App() {
+
+  const [text, setText] = useState('')
+  const [time, setTime] = useState('')
+  const [date, setDate] = useState('')
+  const [completed, setComplete] = useState(false)
 
   //toggle add button
   const [showForm, setForm] = useState( false )
   const onShow = () => setForm(!showForm)
   const showAdd =  showForm
 
-  const [tasks, setTask] =useState ([])
+  const onEdit = () => setForm(showForm ? showForm : !showForm)
+
+  // realtime fetch Tasks
+  const [tasks, setTask] = useState ([])
 
   useEffect(() => {
-    const getTasks = async () => {
-       const dataFromServer = await fetchTasks()
-       setTask(dataFromServer)
+      /*const getTasks = async () => {
+        let list = []
+        try {
+          const querySnapshot = await getDocs(collection(db, "tasks"));
+          querySnapshot.forEach((doc) => {
+            list.push({id: doc.id, ...doc.data() })
+          })
+          setTask(list)
+      } catch (error) {
+        console.log(error)
+      }
     }
-
-    getTasks()
+    getTasks()*/
+    const unsub = onSnapshot(collection(db, "tasks"), (snapShot) => {
+      let list = []
+      snapShot.docs.forEach((doc) => {
+        list.push({id: doc.id, ...doc.data() })
+      })
+      setTask(list)
+  },
+  (error) => {
+    console.log(error)
+  }
+  )
+    return () => {
+      unsub()
+    }
   }, [])
 
-  // fetch Tasks
-  const fetchTasks = async () => {
-    const res = await fetch('http://localhost:5000/tasks')
-    const data = await res.json()
-
-    return data
-  }
-
-  //toggle reminder on server
-  const fetchTask = async (id) => {
-    const res = await fetch(`http://localhost:5000/tasks/${id}`)
-    const data = await res.json()
-
-    return data
-  }
-
-    //add events/task
-  const addTask = async (task) => {
-    const res = await fetch('http://localhost:5000/tasks', {
-      method: 'POST',
-      headers: {
-        'Content-type': 'application/json'
-      },
-      body: JSON.stringify(task)
+  //add events/task
+  const addTask = async () => {
+    await addDoc(collection(db, "tasks" ), {
+      text, date, time, completed
     })
-
-    const data = res.json()
-
-    setTask([...tasks, data])
-
-    /*const id = Math.floor(Math.random() * 1000) + 1
-    const newTask = {id, ...task}
-    setTask([...tasks, newTask])*/
   }
-
 
    //delete events/task
   const deleteTask = async (id) => {
-    await fetch(`http://localhost:5000/tasks/${id}`, {
-      method: 'DELETE'
-    })
+    try {
+      await deleteDoc(doc(db, "tasks", id)) 
+      setTask((tasks.filter((task) => task.id !== id)))
+    } catch (error) {
+      console.log(error)
+    }
+  }   
+ 
+  //update task; different steps are involved  
+  //First get indiviual task to be updated
+  const getTask = (id) => {
+    return getDoc(doc(db, "tasks", id))
+  }
 
-    setTask(tasks.filter((task) => task.id !== id))
-  }          
+  // get the Id of each task to be edited, it's values will be displayed on the UI
+  const [taskId, setTaskId] = useState('')
+  const getTaskIdHandler = (id) => {
+    setTaskId(id)
+  }
 
-   //toggle Reminder
-   const setReminder = async (id) => {
-    const taskToToggle = await fetchTask(id)
-    const updatedTask = { ...taskToToggle, reminder: !taskToToggle.reminder }
+  // Then update
+  const updateTask =  async (id) => {
+    try {
+        await updateDoc(doc(db, 'tasks', id), {
+          text, date, time, completed
+        })
+    } catch (error) {
+      console.log(error)
+    }
+  }
 
-    const res = await fetch(`http://localhost:5000/tasks/${id}`, {
-      method:'PUT',
-      headers: {
-        'Content-type': 'application/json'
-      },
-      body: JSON.stringify(updatedTask)
-
-    })
-
-    const data = await res.json()
-
-    setTask(tasks.map((task) => task.id === id ? 
-    {...task, reminder: data.reminder} : task))
+   //toggle completed
+   const setCompleted =  async (id) => {
+    const taskToToggle = await getTask(id)
+    const updatedTask = { ...taskToToggle, completed: !taskToToggle.completed }
+    setComplete(tasks.map((task) => task.id === id ? 
+    {...task, completed:  updatedTask.completed} : task))
    }
+
    return (
     <div>
       <Header title="Task Tracker" />
       <div className="task-card">
-      {showForm && <AddTask onAdd={addTask} />}
+      {showForm && <AddTask onAdd={addTask} getTask={getTask} 
+      updateTask={updateTask} id={taskId} setTaskId={setTaskId} setDate={setDate} 
+      date={date} setComplete={setComplete} completed={completed} 
+      setText={setText} text={text} setTime={setTime} time={time} />}
         <div className='task-parent'>
-            <h2 className='title'>Events/Task</h2>
-            <Button  onClick={onShow} text={showAdd ? 'Close' : 'Add'} color={showAdd ? 'rgb(179, 32, 32)' : 'rgb(0, 128, 0)'} />
+            <h2 className='title'>Event/Task</h2>
+            <Button  onClick={onShow} text={showAdd ? 'Close' : 'Add'} 
+            color={showAdd ? 'rgb(179, 32, 32)' : 'rgb(0, 128, 0)'} />
         </div>
-        {tasks.length > 0 ? (<Events tasks={tasks} onDelete={deleteTask} onToggle={setReminder} />) : 
+        {tasks.length > 0 ? (<Events tasks={tasks} onEdit={onEdit} 
+        getTaskId={getTaskIdHandler} onDelete={deleteTask} onToggle={setCompleted} />) : 
         (<p className='no-task'>No tasks to show, Add task</p>)}
     </div>
     <Footer />

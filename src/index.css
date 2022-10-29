@@ -66,12 +66,17 @@ body {
   flex-direction: column;
   color:  rgb(14, 1, 35);
   position: relative;
-  margin: 30px 10px 0 10px;
+  margin: 30px 5px 0 5px;
   gap: 5px;
 }
 
-#event {
+.wrapper-event {
+  display: flex;
+  align-items: center;
   background-color: aliceblue;
+}
+
+#event {
   padding: 10px 20px;
 }
 
@@ -87,14 +92,25 @@ body {
   font-size: 18px;
 }
 
-.task.reminder {
-  border-left: solid green 3px;
+.comp.completed {
+  color: green;
+}
+
+.comp {
+  color: #decfe2;
+  font-size: 18px;
+  padding-left: 15px;
+}
+
+.task {
+  width: 100%;
 }
 
 .form {
   position: relative;
   width: 100%;
-  margin: 20px;
+  margin: auto;
+  margin: 10px 10px 50px 10px;
 }
 
 .form-control {
@@ -125,31 +141,34 @@ body {
   font-weight: bold;
 }
 
-.set-reminder {
-  margin-right: 20px
+.set-completed {
+  margin-right: 10px
 }
 
 .submit {
   position: relative;
   border-radius: 5px;
   color: #ffff;
-  background-color: rgb(14, 1, 35);
   border: none;
   width: 50%;
   cursor: pointer;
   font-size: 18px;
-  height: 40px;
+  height: 35px;
   margin: 0 22%;
 }
 
+.submit:active {
+  background-color: black;
+}
 
-
+.submit:disabled {
+    background-color: #decfe2;
+}
 
 
 .footer {
   position: relative;
   text-align: center;
-  background-color: rgb(14, 1, 35);
-  color: #ffff;
-  bottom: 0;
+  color: rgb(14, 1, 35);
+  margin-bottom: 20px;
 }
