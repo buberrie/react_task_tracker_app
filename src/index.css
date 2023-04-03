@@ -129,12 +129,21 @@ body {
   outline: none;
 }
 
+.input.error {
+  outline: 1px solid rgb(244, 37, 37);
+}
+
+.input.error::placeholder {
+  color: rgb(244, 37, 37);
+}
+
 .input:focus {
   outline: solid rgb(112, 112, 140) 1.5px;
 }
 
 .block {
   display: block;
+  margin-bottom: 5px;
 }
 
 .bold {

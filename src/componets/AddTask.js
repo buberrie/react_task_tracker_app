@@ -8,7 +8,7 @@ const AddTask = (props) => {
             await props.updateTask(props.id)
             props.setTaskId("")
         } else {
-            props.onAdd()
+            props.addTask()
         }
 
         props.setDate("")
@@ -40,7 +40,7 @@ const AddTask = (props) => {
             
             <input type="text" 
              placeholder="Add Event/task" 
-             className="input" 
+             className={`input ${props.error ? "error" : ""}`} 
              value={props.text}
              onChange={(e) => props.setText(e.target.value)} />
         </legend>
@@ -67,7 +67,7 @@ const AddTask = (props) => {
              onChange={(e) => props.setComplete(e.currentTarget.checked)} />
         </legend>
 
-        <button type="submit" className="submit" disabled={ !props.text } 
+        <button type="submit" className="submit" 
             style={{backgroundColor: props.id ? 'rgb(0, 51, 0)	' : 'rgb(14, 1, 35)'}}>
             {
                 props.id ? "Update" : "save"

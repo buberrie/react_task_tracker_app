@@ -15,7 +15,8 @@ function App() {
   const [time, setTime] = useState('')
   const [date, setDate] = useState('')
   const [completed, setComplete] = useState(false)
-  const onCompleted = () => setComplete(!completed)
+  const [error, setError] = useState(false)
+
 
   //toggle add button
   const [showForm, setForm] = useState( false )
@@ -59,9 +60,16 @@ function App() {
 
   //add events/task to backend 
   const addTask = async () => {
-    await addDoc(collection(db, "tasks" ), {
-      text, date, time, completed
-    })
+    if (text.length === 0) {
+      setError(true)
+      setTimeout(() => {
+        setError(false)
+      }, 5000);
+    } else {
+      await addDoc(collection(db, "tasks" ), {
+        text, date, time, completed
+      })
+    }
   }
 
    //delete events/task from backend
@@ -100,7 +108,8 @@ function App() {
    //toggle completed
   
    const setCompleted =  async (id) => {
-    setComplete(onCompleted)
+      setComplete(!completed)
+
     
     //update to backend
     try {
@@ -116,7 +125,7 @@ function App() {
     <div>
       <Header title="Task Tracker" />
       <div className="task-card">
-        {showForm && <AddTask onAdd={addTask}
+        {showForm && <AddTask addTask={addTask}
           getTask={getTask} 
           updateTask={updateTask}
           id={taskId}
@@ -128,7 +137,8 @@ function App() {
           setText={setText}
           text={text}
           setTime={setTime}
-          time={time} />}
+          time={time} 
+          error={error} />}
           <div className='task-parent'>
               <h2 className='title'>Event/Task</h2>
               <Button  onClick={onShow} text={showAdd ? 'Close' : 'Add'} 
