@@ -15,6 +15,7 @@ function App() {
   const [time, setTime] = useState('')
   const [date, setDate] = useState('')
   const [completed, setComplete] = useState(false)
+  const onCompleted = () => setComplete(!completed)
 
   //toggle add button
   const [showForm, setForm] = useState( false )
@@ -56,14 +57,14 @@ function App() {
     }
   }, [])
 
-  //add events/task
+  //add events/task to backend 
   const addTask = async () => {
     await addDoc(collection(db, "tasks" ), {
       text, date, time, completed
     })
   }
 
-   //delete events/task
+   //delete events/task from backend
   const deleteTask = async (id) => {
     try {
       await deleteDoc(doc(db, "tasks", id)) 
@@ -73,7 +74,7 @@ function App() {
     }
   }   
  
-  //update task; different steps are involved  
+  //update/edit task; different steps are involved  
   //First get indiviual task to be updated
   const getTask = (id) => {
     return getDoc(doc(db, "tasks", id))
@@ -97,31 +98,52 @@ function App() {
   }
 
    //toggle completed
+  
    const setCompleted =  async (id) => {
-    const taskToToggle = await getTask(id)
-    const updatedTask = { ...taskToToggle, completed: !taskToToggle.completed }
-    setComplete(tasks.map((task) => task.id === id ? 
-    {...task, completed:  updatedTask.completed} : task))
-   }
+    setComplete(onCompleted)
+    
+    //update to backend
+    try {
+        await updateDoc(doc(db, 'tasks', id), {
+          completed
+        })
+      } catch (error) {
+        console.log(error)
+      }
+  }
 
    return (
     <div>
       <Header title="Task Tracker" />
       <div className="task-card">
-      {showForm && <AddTask onAdd={addTask} getTask={getTask} 
-      updateTask={updateTask} id={taskId} setTaskId={setTaskId} setDate={setDate} 
-      date={date} setComplete={setComplete} completed={completed} 
-      setText={setText} text={text} setTime={setTime} time={time} />}
-        <div className='task-parent'>
-            <h2 className='title'>Event/Task</h2>
-            <Button  onClick={onShow} text={showAdd ? 'Close' : 'Add'} 
-            color={showAdd ? 'rgb(179, 32, 32)' : 'rgb(0, 128, 0)'} />
-        </div>
-        {tasks.length > 0 ? (<Events tasks={tasks} onEdit={onEdit} 
-        getTaskId={getTaskIdHandler} onDelete={deleteTask} onToggle={setCompleted} />) : 
-        (<p className='no-task'>No tasks to show, Add task</p>)}
-    </div>
-    <Footer />
+        {showForm && <AddTask onAdd={addTask}
+          getTask={getTask} 
+          updateTask={updateTask}
+          id={taskId}
+          setTaskId={setTaskId}
+          setDate={setDate} 
+          date={date}
+          setComplete={setComplete}
+          completed={completed} 
+          setText={setText}
+          text={text}
+          setTime={setTime}
+          time={time} />}
+          <div className='task-parent'>
+              <h2 className='title'>Event/Task</h2>
+              <Button  onClick={onShow} text={showAdd ? 'Close' : 'Add'} 
+              color={showAdd ? 'rgb(179, 32, 32)' : 'rgb(0, 128, 0)'} />
+          </div>
+        {tasks.length > 0 ? (<Events 
+          tasks={tasks}
+          onEdit={onEdit} 
+          getTaskId={getTaskIdHandler}
+          onDelete={deleteTask}
+          onToggle={setCompleted}
+          completed={completed}/>) : 
+          (<p className='no-task'>No tasks to show, Add task</p>)}
+      </div>
+      <Footer />
     </div>
   );
 }

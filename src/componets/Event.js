@@ -2,12 +2,7 @@ import { FaTimes } from 'react-icons/fa'
 import { AiFillEdit } from 'react-icons/ai'
 import {BsCheckCircleFill} from 'react-icons/bs'
 
-const Event = ({task, onDelete, onToggle, getTaskId, onEdit  }) => {
-
-  //const navigate = useNavigate()
-
-  //const [checked, setChecked] = useState(false)
-  //const onCheck = setChecked(!checked)
+const Event = ({task, onDelete, onToggle, getTaskId, onEdit }) => {
 
   const handleOnEdit = () => {
     onEdit()
@@ -17,7 +12,7 @@ const Event = ({task, onDelete, onToggle, getTaskId, onEdit  }) => {
   return (
     <div className="wrapper-event">    
       <BsCheckCircleFill
-        className = {`comp ${task.completed ? 'completed' : ''}`}        
+        className = {`comp ${task.completed ? 'completed' : ''}`} 
         onClick={()=> onToggle(task.id)}>
       </BsCheckCircleFill>
       <div className= "task"

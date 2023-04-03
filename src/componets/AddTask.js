@@ -1,37 +1,35 @@
 import { useEffect } from "react"
-import { useNavigate } from 'react-router-dom'
 
-const AddTask = ({ onAdd, updateTask, setDate, date, setComplete, completed, setText, text, time, setTime, getTask, id, setTaskId}) => {
-
+const AddTask = (props) => {
     
     const onSubmit = async (e) => {
         e.preventDefault()
-        if (id !== undefined && id !== '') {
-            await updateTask(id)
-            setTaskId("")
+        if (props.id !== undefined && props.id !== '') {
+            await props.updateTask(props.id)
+            props.setTaskId("")
         } else {
-            onAdd()
+            props.onAdd()
         }
 
-        setDate("")
-        setText("")
-        setComplete(false)
-        setTime("")
+        props.setDate("")
+        props.setText("")
+        props.setComplete(false)
+        props.setTime("")
     }
 
     const editHandler = async () => {
-        const docSnap = await getTask(id)
-        setText(docSnap.data().text)
-        setTime(docSnap.data().time)
-        setDate(docSnap.data().date)
-        setComplete(docSnap.data().completed)
+        const docSnap = await props.getTask(props.id)
+        props.setText(docSnap.data().text)
+        props.setTime(docSnap.data().time)
+        props.setDate(docSnap.data().date)
+        props.setComplete(docSnap.data().completed)
       }
 
     useEffect(() => {
-        if (id !== undefined && id !== '') {
+        if (props.id !== undefined && props.id !== '') {
             editHandler()
         }
-    }, [id])
+    }, [props.id])
 
 
 
@@ -43,37 +41,36 @@ const AddTask = ({ onAdd, updateTask, setDate, date, setComplete, completed, set
             <input type="text" 
              placeholder="Add Event/task" 
              className="input" 
-             value={text}
-             onChange={(e) => setText(e.target.value)} />
+             value={props.text}
+             onChange={(e) => props.setText(e.target.value)} />
         </legend>
         <legend className="form-control">
             <label htmlFor="Date" className="block bold">Date</label>
             <input type="date" 
              placeholder="Set date" 
              className="input"
-             value={date}
-             onChange={(e) => setDate(e.target.value)} />
+             value={props.date}
+             onChange={(e) => props.setDate(e.target.value)} />
         </legend>
         <legend className="form-control">
             <label htmlFor="Time" className="block bold" >Time</label>
             <input type="time"
              placeholder="Set time" 
              className="input"
-             value={time}
-             onChange={(e) => setTime(e.target.value)} />
+             value={props.time}
+             onChange={(e) => props.setTime(e.target.value)} />
         </legend>
         <legend className="form-control">
             <label htmlFor="Completed" className="bold set-completed">Completed</label>
             <input type="checkbox"
-            checked={completed}
-             value={completed} 
-             onChange={(e) => setComplete(e.currentTarget.checked)} />
+             checked={props.completed}
+             onChange={(e) => props.setComplete(e.currentTarget.checked)} />
         </legend>
 
-        <button type="submit" className="submit" disabled={ !text } 
-            style={{backgroundColor: id ? 'rgb(0, 51, 0)	' : 'rgb(14, 1, 35)'}}>
+        <button type="submit" className="submit" disabled={ !props.text } 
+            style={{backgroundColor: props.id ? 'rgb(0, 51, 0)	' : 'rgb(14, 1, 35)'}}>
             {
-                id ? "Update" : "save"
+                props.id ? "Update" : "save"
             }
         </button>
     </form>
